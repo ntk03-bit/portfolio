@@ -1,0 +1,389 @@
+@charset "UTF-8";
+
+/* BASE #3a5a40
+   ACCENT #eab308
+   SUB #e2e8f0 */
+
+:root {
+    /* メインカラー */
+    --color-olive: #3a5a40;
+    --color-moss: #698f3f;
+    /* アクセントカラー */
+    --color-clay-beige: #eab308;
+    --color-clay-beige-light: #cca43b;
+    /* サブカラー */
+    --color-sand-brown: #e2e8f0;
+    /* 背景 */
+    --color-bg: #FCFBF7;
+    /* テキスト */
+    --color-text-main: #2c302e;
+    --color-text-sub: #0f172a;
+}
+
+html {
+    font-size: 100%;
+    /* スクロールをスムーズに */
+    scroll-behavior: smooth;
+}
+
+body {
+    /* 游ゴシック3つがWindows用、ヒラギノ2つはMac用、メイリオは共通 */
+    font-family: "Yu Gothic", "游ゴシック", YuGothic, "Hiragino Sans", "ヒラギノ角ゴシック", "メイリオ", sans-serif;
+    /* Windowsでの游ゴシックかすれ対策 */
+    font-weight: 500;
+    background: var(--color-bg);
+    color: var(--color-text-main);
+    /* 行間と字間の幅（emは自動で文字の大きさに合わせてくれる） */
+    line-height: 1.8;
+    letter-spacing: 0.04em;
+    position: relative;
+    min-height: 100vh;
+    /* 周囲を囲む */
+    border: 1rem solid var(--color-olive);
+    /* 横にはみ出た要素を非表示にする */
+    overflow-x: hidden;
+}
+
+a {
+    /* 下線なし */
+    text-decoration: none;
+}
+
+.wrapper {
+    /* 最大幅1100px */
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* モバイル版 */
+@media (max-width: 600px) {
+    .wrapper {
+        padding: 0 4%;
+    }
+}
+
+/* ----- ヘッダー ----- */
+h1 {
+    letter-spacing: 0.16rem;
+    padding: 3vh 5vh;
+}
+
+h1 a {
+    /* 親(h1)の色を引き継ぐ */
+    color: inherit;
+    display: block;
+    cursor: pointer;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+@media (max-width: 600px) {
+    .page-header {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+/* ----- ナビゲーションボタン ----- */
+.main-nav {
+    position: fixed;
+    top: -100%;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.9);
+    color: rgba(255, 255, 255, 0.95);
+    display: flex;
+    font-weight: 600;
+    /* 縦並びにする */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* 初期余白を消して真ん中揃え */
+    padding: 0;
+    font-size: 1.25rem;
+    list-style: none;
+    /* 上からスライド */
+    transition: top 0.5s;
+    /* 他の要素より手前に表示 */
+    z-index: 90;
+}
+
+/* 切り替わりアイコンのベース設定 */
+.bi-cloud-moon,
+.bi-moon-stars {
+    position: absolute;
+    left: 60%;
+    top: 15%;
+    font-size: 150px;
+    transform: translateY(-50%);
+    /* なめらかに変化 */
+    transition: opacity 0.4s ease-in-out;
+}
+
+/* 初期状態（1は見える・0は透明にして隠す） */
+.bi-cloud-moon {
+    color: rgba(255, 255, 255, 0.55);
+    opacity: 1;
+}
+
+.bi-moon-stars {
+    opacity: 0;
+}
+
+/* ホバーしたとき入れ替わる */
+.main-nav:has(.nav-menu:hover) .bi-cloud-moon {
+    opacity: 0;
+}
+
+.main-nav:has(.nav-menu:hover) .bi-moon-stars {
+    opacity: 1;
+}
+
+.main-nav .nav-menu:not(:last-child) {
+    margin-bottom: 30px;
+}
+
+.main-nav .nav-menu {
+    background: rgba(255, 255, 255, 0.55);
+    width: 160px;
+    height: 80px;
+    border-radius: 50%;
+    /* 0.8倍に設定 */
+    transform: scale(0.8);
+    /* 楕円の形からはみ出たクリックエリアを切り取る */
+    overflow: hidden;
+    margin: 10px auto;
+    transition: transform 0.4s ease-in-out;
+}
+
+.main-nav .nav-menu a {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #2c3027;
+}
+
+.main-nav .nav-menu:hover {
+    background: #fff;
+    /* 光の影をつける */
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.7);
+    /* 0.8倍から1倍に（大きくなるように見える） */
+    transform: scale(1);
+}
+
+/* ナビゲーションボタン（開く） */
+#navbtn {
+    position: fixed;
+    top: 40px;
+    right: 40px;
+    padding: 0;
+    outline: none;
+    border: 1px solid #333333;
+    background: #fff;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    /* 中央揃えにする */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+@media (max-width: 600px) {
+    #navbtn {
+        top: 20px;
+        right: 20px;
+    }
+
+}
+
+#navbtn::before,
+#navbtn::after {
+    content: '';
+    /* ボタンの中央に重ねる */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 24px;
+    height: 4px;
+    background-color: #333333;
+    /* transform: translateY(6px); */
+    transition: 0.3s ease-in-out;
+}
+
+#navbtn::before {
+    /* height: 4px;で線の太さが出た分、-10pxと6pxしてずらす */
+    transform: translate(-50%, -10px);
+    box-shadow: 0 8px #333333;
+}
+
+#navbtn::after {
+    /* 真ん中より下にずらす */
+    transform: translate(-50%, 6px);
+}
+
+/* ナビゲーションボタン（閉じる） */
+.open #navbtn {
+    z-index: 100;
+    border: none;
+    border-radius: 50%;
+}
+
+.open #navbtn::before {
+    /* ボタンの真ん中を中心にして回転 */
+    transform: translate(-50%, -50%) rotate(-45deg);
+    box-shadow: none;
+}
+
+.open #navbtn::after {
+    /* ボタンの真ん中を中心にして回転 */
+    transform: translate(-50%, -50%) rotate(45deg);
+    box-shadow: none;
+}
+
+/* ナビゲーションメニュー開いたとき */
+.open .main-nav {
+    top: 0;
+}
+
+@media (max-width: 600px) {
+    .main-nav {
+        font-size: 1.25rem;
+    }
+}
+
+/* ----- 本文 ----- */
+
+.page-title {
+    font-size: 2.5rem;
+    /* font-family: ; */
+    font-weight: 700;
+    text-transform: uppercase;
+    font-style: normal;
+    margin: 40px 0;
+    text-align: center;
+}
+
+@media (max-width: 600px) {
+    .page-title {
+        font-size: 2rem;
+    }
+}
+
+.profile-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 5px 40px rgba(68, 51, 34, 0.08);
+    border: 1px solid #f0eae1;
+    padding: 30px;
+    max-width: 800px;
+    margin: auto;
+}
+
+@media (max-width: 600px) {
+    .profile-card {
+        padding: 24px 16px;
+    }
+}
+
+.two-column-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 50px;
+}
+
+@media (max-width: 600px) {
+    .two-column-wrapper {
+        flex-direction: column;
+        margin-bottom: 20px;
+    }
+}
+
+.two-column-image,
+.two-column-text {
+    /* 画像とテキストの幅を均等に分ける */
+    flex: 1;
+}
+
+.two-column-image {
+    text-align: center;
+}
+
+.two-column-image img {
+    width: 100%;
+    max-width: 200px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+@media (max-width: 600px) {
+    .two-column-wrapper {
+        /* スマホ表示のときは縦並び */
+        flex-direction: column;
+        margin: 20px;
+    }
+}
+
+.main-text {
+    font-size: 1.125rem;
+    margin: 10px 0 20px;
+}
+
+/* ボタン */
+.go-profile {
+    text-align: center;
+}
+
+.btn-profile {
+    display: inline-block;
+    font-size: 1.5rem;
+    background: #fff;
+    color: var(--color-text-main);
+    border: 2px solid var(--color-moss);
+    border-radius: 6px;
+    padding: 8px 16px;
+    margin: auto;
+    transition: 0.3s ease-in-out;
+}
+
+.btn-profile:hover {
+    color: #fff;
+    background: var(--color-moss);
+}
+
+/* ----- プロフィールページ ----- */
+.about-card {
+    text-align: center;
+}
+
+.skill-card {
+    text-align: center;
+}
+
+.important-card {
+    text-align: center;
+}
+
+/* ----- フッター ----- */
+footer {
+    background: var(--color-olive);
+    text-align: center;
+    padding: 30px 0;
+}
+
+footer p {
+    color: #fff;
+    font-size: 0.875rem;
+}
