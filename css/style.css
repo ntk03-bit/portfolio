@@ -87,95 +87,91 @@ h1 a {
     }
 }
 
-/* ----- ナビゲーションボタン ----- */
+/* メニューを開いたときの背面スクロール防止 */
+html.open {
+    overflow: hidden;
+}
+
+/* ----- ナビゲーションメニュー ----- */
 .main-nav {
     position: fixed;
     top: -100%;
     left: 0;
     width: 100%;
+    /* スマホのツールバー（アドレスバーなど）が出し入れされたときに
+    表示サイズが変化するため、表示崩れを防ぐためdvhも表記 */
     height: 100vh;
-    background: rgba(0, 0, 0, 0.9);
-    color: rgba(255, 255, 255, 0.95);
+    height: 100dvh;
+    background: var(--color-olive);
+    color: var(--color-bg);
     display: flex;
     font-weight: 600;
     /* 縦並びにする */
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    /* 初期余白を消して真ん中揃え */
+    /* 初期余白を消して中央揃え */
     padding: 0;
     font-size: 1.25rem;
     list-style: none;
     /* 上からスライド */
-    transition: top 0.5s;
+    transition: top 0.45s ease-in-out, visibility 0.45s;
     /* 他の要素より手前に表示 */
     z-index: 90;
+    /* 閉じている時はフォーカスさせない */
+    visibility: hidden;
 }
 
-/* 切り替わりアイコンのベース設定 */
-.bi-cloud-moon,
-.bi-moon-stars {
-    position: absolute;
-    left: 60%;
-    top: 15%;
-    font-size: 150px;
-    transform: translateY(-50%);
-    /* なめらかに変化 */
-    transition: opacity 0.4s ease-in-out;
-}
-
-/* 初期状態（1は見える・0は透明にして隠す） */
-.bi-cloud-moon {
-    color: rgba(255, 255, 255, 0.55);
-    opacity: 1;
-}
-
-.bi-moon-stars {
-    opacity: 0;
-}
-
-/* ホバーしたとき入れ替わる */
-.main-nav:has(.nav-menu:hover) .bi-cloud-moon {
-    opacity: 0;
-}
-
-.main-nav:has(.nav-menu:hover) .bi-moon-stars {
-    opacity: 1;
+/* ナビゲーションメニュー開いたとき */
+.open .main-nav {
+    top: 0;
+    visibility: visible;
 }
 
 .main-nav .nav-menu:not(:last-child) {
-    margin-bottom: 30px;
+    margin-bottom: 24px;
 }
 
+/* 楕円ボタン */
 .main-nav .nav-menu {
-    background: rgba(255, 255, 255, 0.55);
+    /* 背景色を不透明にして文字周りの四角い滲みを防止 */
+    background: var(--color-bg);
     width: 160px;
     height: 80px;
     border-radius: 50%;
-    /* 0.8倍に設定 */
-    transform: scale(0.8);
-    /* 楕円の形からはみ出たクリックエリアを切り取る */
+    /* GPU描画の安定化とスケーリング */
+    transform: scale(0.85) translateZ(0);
+    backface-visibility: hidden;
     overflow: hidden;
     margin: 10px auto;
-    transition: transform 0.4s ease-in-out;
+    transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .main-nav .nav-menu a {
     display: flex;
     width: 100%;
     height: 100%;
+    /* a要素も楕円形にすることで、四角い要素の境界漏れを防止 */
+    border-radius: 50%;
     justify-content: center;
     align-items: center;
     text-align: center;
-    color: #2c3027;
+    color: var(--color-olive);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    transition: color 0.3s ease;
 }
 
+/* ホバー時 */
 .main-nav .nav-menu:hover {
-    background: #fff;
+    background: var(--color-clay-beige);
     /* 光の影をつける */
-    box-shadow: 0 0 25px rgba(255, 255, 255, 0.7);
-    /* 0.8倍から1倍に（大きくなるように見える） */
-    transform: scale(1);
+    box-shadow: 0 0 25px rgba(234, 179, 8, 0.65);
+    transform: scale(1) translateZ(0);
+}
+
+.main-nav .nav-menu:hover a {
+    color: #fff;
 }
 
 /* ナビゲーションボタン（開く） */
@@ -185,8 +181,8 @@ h1 a {
     right: 40px;
     padding: 0;
     outline: none;
-    border: 1px solid #333333;
-    background: #fff;
+    border: 1px solid var(--color-olive);
+    background: var(--color-bg);
     width: 50px;
     height: 50px;
     border-radius: 50%;
@@ -197,6 +193,7 @@ h1 a {
     justify-content: center;
     align-items: center;
     z-index: 100;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 @media (max-width: 600px) {
@@ -204,7 +201,6 @@ h1 a {
         top: 20px;
         right: 20px;
     }
-
 }
 
 #navbtn::before,
@@ -215,45 +211,39 @@ h1 a {
     top: 50%;
     left: 50%;
     width: 24px;
-    height: 4px;
-    background-color: #333333;
-    /* transform: translateY(6px); */
-    transition: 0.3s ease-in-out;
+    height: 3px;
+    background-color: var(--color-olive);
+    transition: transform 0.3s ease-in-out, background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 #navbtn::before {
-    /* height: 4px;で線の太さが出た分、-10pxと6pxしてずらす */
-    transform: translate(-50%, -10px);
-    box-shadow: 0 8px #333333;
+    transform: translate(-50%, -9px);
+    box-shadow: 0 7px var(--color-olive);
 }
 
 #navbtn::after {
-    /* 真ん中より下にずらす */
     transform: translate(-50%, 6px);
 }
 
-/* ナビゲーションボタン（閉じる） */
+/* ナビゲーションボタン（閉じるボタン） */
 .open #navbtn {
     z-index: 100;
-    border: none;
+    background: transparent;
+    border: 1px solid rgba(252, 251, 247, 0.7);
     border-radius: 50%;
 }
 
 .open #navbtn::before {
-    /* ボタンの真ん中を中心にして回転 */
+    /* ボタンの真ん中を中心にして×に回転させる */
     transform: translate(-50%, -50%) rotate(-45deg);
     box-shadow: none;
+    background-color: var(--color-bg);
 }
 
 .open #navbtn::after {
-    /* ボタンの真ん中を中心にして回転 */
     transform: translate(-50%, -50%) rotate(45deg);
     box-shadow: none;
-}
-
-/* ナビゲーションメニュー開いたとき */
-.open .main-nav {
-    top: 0;
+    background-color: var(--color-bg);
 }
 
 @media (max-width: 600px) {
